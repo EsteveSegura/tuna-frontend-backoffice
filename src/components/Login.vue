@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <h1>Login</h1>
+    <h1>Login {{test}}</h1>
     <form v-on:submit.prevent>
       <input type="text" class="input-text" v-model="user" placeholder="agent" />
       <input type="password" class="input-text" v-model="password" placeholder="password" />
@@ -17,13 +17,14 @@ export default {
     return {
       user: "",
       password: "",
+      test: process.env.VUE_APP_TEST
     };
   },
   methods: {
     login: async function () {
       try {
         const response = await axios.post(
-          "http://localhost:3000/api/v1/users/",
+          `${process.env.VUE_APP_BASE_URL}/users/`,
           {
             username: this.user,
             password: this.password,
@@ -34,6 +35,7 @@ export default {
         localStorage.user = this.user;
         this.$router.push('SoundBoards')
       } catch (error) {
+        console.log(error)
         localStorage.removeItem("token"); 
         localStorage.removeItem("user"); 
         alert("Wrong user or password")

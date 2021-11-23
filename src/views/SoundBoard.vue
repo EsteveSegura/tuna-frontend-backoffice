@@ -8,29 +8,58 @@
         <div></div>
       </div>
     </div>
-    <table v-else>
-      <caption>
-        <b>{{ querySoundboard }}</b>
-      </caption>
-      <thead>
-        <tr>
-          <th scope="col">Soundboard Name</th>
-          <th scope="col">Category</th>
-          <th scope="col">Audio</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in sounds" :key="item.id">
-          <td data-label="Title">
-            <router-link :to="{ name: 'Sound', params: { id: item.id } }">
-              {{ item.oldTitle }}
-            </router-link>
-          </td>
-          <td data-label="Category">{{ item.oldCategory }}</td>
-          <td data-label="Audio"><audio :src="item.soundUrl" controls /></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="tables" v-else>
+      <table>
+        <caption>
+          <div style="font-size: 30px"><b>Not Refined Sounds</b></div>
+          {{querySoundboard}} 
+          <div style="font-size:16px; margin-top: 15px;"><b style="font-size:9px">Refined</b> {{stringRefined}} <b style="font-size:9px">NotRefined</b></div>
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Sound Name</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in notRefinedSounds" :key="item.id">
+            <td data-label="Title">
+              <span v-if="item.newTitle && !item.isRefined">⚡</span>
+              <router-link :to="{ name: 'Sound', params: { id: item.id } }">
+                {{ item.oldTitle }} 
+              </router-link>
+              <span v-if="item.newTitle && !item.isRefined">⚡</span>
+            </td>
+            <td data-label="Category">{{ item.oldCategory }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          <div style="font-size: 30px"><b>Refined Sounds</b></div>
+          {{
+            querySoundboard
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Sound Name</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in refinedSounds" :key="item.id">
+            <td data-label="Title">
+              <router-link :to="{ name: 'Sound', params: { id: item.id } }">
+                {{ item.oldTitle }}
+              </router-link>
+            </td>
+            <td data-label="Category">{{ item.oldCategory }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -42,13 +71,17 @@ export default {
   data: function () {
     return {
       sounds: [],
+      notRefinedSounds: [],
+      refinedSounds: [],
       querySoundboard: this.$route.query.soundboard,
       loading: true,
+      counter: null,
+      stringRefined: 0,
     };
   },
   async mounted() {
     const response = await axios.get(
-      `http://localhost:3000/api/v1/sounds/soundboard?soundBoard=${this.$route.query.soundboard}`
+      `${process.env.VUE_APP_BASE_URL}/sounds/soundboard?soundBoard=${this.$route.query.soundboard}`
     );
     this.sounds = response.data.sounds;
 
@@ -57,14 +90,27 @@ export default {
       return el;
     });
 
+    const notRefinedSounds = fixUrl.filter((el) => !el.isRefined);
+    this.notRefinedSounds = notRefinedSounds;
+
+    const refinedSounds = fixUrl.filter((el) => el.isRefined);
+    this.refinedSounds = refinedSounds;
+
     this.loading = false;
     this.sounds = fixUrl;
+
+    const counter = await axios.get(
+      `${process.env.VUE_APP_BASE_URL}/sounds/soundboard/count?soundBoard=${this.querySoundboard}`
+    );
+
+    this.counter = counter.data;
+    this.stringRefined = `${counter.data.refinedCount}/${counter.data.refinedCount + counter.data.notRefinedCount}`
   },
 };
 </script>
 
 <style scoped>
-.home{
+.home {
   padding: 0 4%;
 }
 .loader {
