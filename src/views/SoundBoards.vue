@@ -41,6 +41,7 @@
 
 <script>
 import axios from "axios";
+import _ from "lodash";
 
 export default {
   name: "Home",
@@ -443,34 +444,43 @@ export default {
         "Thierry Baudet - Soundboard",
         "Redd Foxx - Soundboard",
       ],
+      soundboardsSplited: _.chunk(this.soundboards, 10),
       soundboardsWithCounter: [],
     };
   },
+  methods: {
+    async load(val) {
+      for (let [i, chunks] of this.soundboardsSplited.entries()) {
+        console.log(i, val);
+        if (i == val) {
+          for (let sb of chunks) {
+            const response = await axios.get(
+              `${process.env.VUE_APP_BASE_URL}/sounds/soundboard/count?soundBoard=${sb}`
+            );
+
+            console.log(this.soundboardsWithCounter);
+            this.soundboardsWithCounter.push({
+              soundBoard: response.config.url.split("=")[1],
+              refinedCount: response.data.refinedCount,
+              notRefinedCount: response.data.notRefinedCount,
+            });
+          }
+        }
+      }
+    },
+  },
   async mounted() {
-    let counterPromises = [];
+    this.soundboardsSplited = _.chunk(this.soundboards, 20);
 
-    for (let sb of this.soundboards) {
-      counterPromises.push(
-        axios.get(
-          `${process.env.VUE_APP_BASE_URL}/sounds/soundboard/count?soundBoard=${sb}`
-        )
-      );
-    }
+    
+    await this.load(0);
+    setTimeout(async() => {
+      for(let i = 1 ; i < this.soundboardsSplited.length; i++){
+        await this.load(i);
+      }
+    },5000)
 
-    Promise.all(counterPromises).then((values) => {
-      let data = values.map((el) => {
-        return {
-          soundBoard: el.config.url.split("=")[1],
-          refinedCount: el.data.refinedCount,
-          notRefinedCount: el.data.notRefinedCount,
-        };
-      });
-
-      this.loading = false;
-      this.soundboardsWithCounter = data;
-
-      console.log(this.soundboardsWithCounter.reduce((partial_sum, a) => partial_sum + a.notRefinedCount, 0));
-    });
+    this.loading = false;
   },
 };
 </script>

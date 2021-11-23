@@ -199,9 +199,8 @@ export default {
         throw Error("Enter one tag at least");
       }
       allTags.forEach((el) => {
-        if (!el.trim().match(/^[0-9a-z]+$/)) {
-          alert(el)
-          throw Error("Tags can only be alphanumeric values");
+        if (!el.trim().match(/^[-_ a-zA-Z0-9]+$/)) {
+          throw Error("Tags can only be alphanumeric values without spaces");
         }
         if (el.length >= 20) {
           throw Error("Each tag can be 20 chars length max");
