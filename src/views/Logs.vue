@@ -8,88 +8,100 @@
         <div></div>
       </div>
     </div>
-    <div class="tables" v-else v-for="item in logs" :key="item.id">
-      <h1 style="text-align: center;">{{ item._id }}</h1>
-      <h3 style="text-align: center;">{{ item.createdAt }}</h3>
-      <table>
-        <caption>
-          <div style="font-size: 24px">Agent</div>
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Id</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Title">{{ item.user.user }}</td>
-            <td data-label="Due Date">{{ item.user.id }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div v-else>
+      <div class="downloadBtn">
+        <input
+          type="submit"
+          class="btn"
+          value="Download CSV"
+          v-on:click="jsonToCsvDownload"
+        />
+      </div>
+        <div style="text-align:center;font-size:10px;">Only the last 15 movements are shown, to see all movements please download the CSV by clicking on the button above this text.</div>
+      <div class="tables" v-for="item in logs" :key="item.id">
+        <h1 style="text-align: center">{{ item._id }}</h1>
+        <h3 style="text-align: center">{{ item.createdAt }}</h3>
+        <table>
+          <caption>
+            <div style="font-size: 24px">Agent</div>
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">Id</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Title">{{ item.user.user }}</td>
+              <td data-label="Due Date">{{ item.user.id }}</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <table>
-        <caption>
-          <div style="font-size: 20px">Original Sound</div>
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Tags</th>
-            <th scope="col">Description</th>
-            <th scope="col">Category</th>
-            <th scope="col">Soundboard</th>
-            <th scope="col">Image</th>
-            <th scope="col">Sound</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Title">{{ item.sound.oldTitle }}</td>
-            <td data-label="Title">{{ item.sound.oldTags.join(", ") }}</td>
-            <td data-label="Title">{{ item.sound.oldDescription }}</td>
-            <td data-label="Title">{{ item.sound.oldCategory }}</td>
-            <td data-label="Title">{{ item.sound.soundBoard }}</td>
-            <td data-label="Title">{{ item.sound.oldImageUrl }}</td>
-            <td data-label="Title">{{ item.sound.soundUrl }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <table>
+          <caption>
+            <div style="font-size: 20px">Original Sound</div>
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Soundboard</th>
+              <th scope="col">Image</th>
+              <th scope="col">Sound</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Title">{{ item.sound.oldTitle }}</td>
+              <td data-label="Title">{{ item.sound.oldTags.join(", ") }}</td>
+              <td data-label="Title">{{ item.sound.oldDescription }}</td>
+              <td data-label="Title">{{ item.sound.oldCategory }}</td>
+              <td data-label="Title">{{ item.sound.soundBoard }}</td>
+              <td data-label="Title">{{ item.sound.oldImageUrl }}</td>
+              <td data-label="Title">{{ item.sound.soundUrl }}</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <table>
-        <caption>
-          <div style="font-size: 20px">Sound edited by agent</div>
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Tags</th>
-            <th scope="col">Description</th>
-            <th scope="col">Category</th>
-            <th scope="col">Soundboard</th>
-            <th scope="col">Image</th>
-            <th scope="col">Sound</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td data-label="Title">{{ item.sound.newTitle }}</td>
-            <td data-label="Title">{{ item.sound.newTags.join(", ") }}</td>
-            <td data-label="Title">{{ item.sound.newDescription }}</td>
-            <td data-label="Title">{{ item.sound.newCategory }}</td>
-            <td data-label="Title">{{ item.sound.soundBoard }}</td>
-            <td data-label="Title">{{ item.sound.newImageUrl }}</td>
-            <td data-label="Title">{{ item.sound.soundUrl }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <table>
+          <caption>
+            <div style="font-size: 20px">Sound edited by agent</div>
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Description</th>
+              <th scope="col">Category</th>
+              <th scope="col">Soundboard</th>
+              <th scope="col">Image</th>
+              <th scope="col">Sound</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Title">{{ item.sound.newTitle }}</td>
+              <td data-label="Title">{{ item.sound.newTags.join(", ") }}</td>
+              <td data-label="Title">{{ item.sound.newDescription }}</td>
+              <td data-label="Title">{{ item.sound.newCategory }}</td>
+              <td data-label="Title">{{ item.sound.soundBoard }}</td>
+              <td data-label="Title">{{ item.sound.newImageUrl }}</td>
+              <td data-label="Title">{{ item.sound.soundUrl }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import _ from "lodash";
 
 export default {
   name: "Home",
@@ -97,18 +109,101 @@ export default {
     return {
       loading: true,
       logs: [],
+      dataCsv: [],
     };
   },
   async mounted() {
     const logs = await axios.get(`${process.env.VUE_APP_BASE_URL}/logs/all`);
 
-    this.logs = logs.data.logs;
+    this.logs = _.take(logs.data.logs,15);
+    const formatCsv = logs.data.logs.map((el) => {
+      const newData = {
+        date: el.createdAt,
+        logId: el._id,
+        agentName: el.user.user,
+        agentId: el.user.id,
+        soundFile: el.sound.soundUrl,
+        soundOwnerId: el.sound.ownerId,
+        soundBoard: el.sound.soundBoard,
+        originalSoundId: el.sound._id,
+        originalTitle: el.sound.oldTitle,
+        originalTags: el.sound.oldTags.join("-"),
+        originalCategory: el.sound.oldCategory,
+        originalDescription: el.sound.oldDescription,
+        originalImage: el.sound.oldImageUrl,
+        newTitle: el.sound.newTitle,
+        newTags: el.sound.newTags.join("-"),
+        newDescription: el.sound.newDescription,
+        newImageUrl: el.sound.newImageUrl,
+      };
+
+      return newData;
+    });
+
+    this.dataCsv = formatCsv;
+
     this.loading = false;
+  },
+  methods: {
+    jsonToCsvDownload() {
+      let json = this.dataCsv;
+      let fields = Object.keys(json[0]);
+      let replacer = function (key, value) {
+        return value === null ? "" : value;
+      };
+      let csv = json.map((row) => {
+        return fields
+          .map(function (fieldName) {
+            return JSON.stringify(row[fieldName], replacer);
+          })
+          .join(",");
+      });
+      csv.unshift(fields.join(",")); // add header column
+      csv = csv.join("\r\n");
+
+      const anchor = document.createElement("a");
+      anchor.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      anchor.target = "_blank";
+      anchor.download = `LOGS_${Date.now()}.csv`;
+      anchor.click();
+    },
   },
 };
 </script>
 
 <style scoped>
+.downloadBtn{
+      display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.btn {
+  width: 120px;
+  background: #27ae60;
+  font-weight: bold;
+  color: white;
+  border: 0 none;
+  border-radius: 1px;
+  cursor: pointer;
+  padding: 10px 5px;
+  margin: 10px auto;
+}
+
 .home {
   padding: 0 4%;
 }
