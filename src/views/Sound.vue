@@ -4,7 +4,8 @@
   <div class="container">
     <article class="card card--1">
       <div class="card__img">
-        <img :src="sound.oldImageUrl" alt="" srcset="" />
+        <img :src="sound.oldImageUrl" :class="!showImage ? 'img-on' : ''" />
+        <img :src="image" :class="showImage ? 'img-on' : ''" />
       </div>
       <a href="#" class="card_link">
         <div class="card__img--hover"></div>
@@ -79,6 +80,12 @@
           value="Save and next"
           v-on:click="updateSound"
         />
+        <input
+          type="button"
+          class="submit"
+          :value="showImage ? 'Display New Image' : 'Display Old Image'"
+          v-on:click="displayImage"
+        />
       </form>
       <input
         type="button"
@@ -105,6 +112,7 @@ export default {
       category: "",
       description: "",
       image: "",
+      showImage: true,
       displayTags: "",
       isAdmin: localStorage.user == "admin",
     };
@@ -140,6 +148,9 @@ export default {
     },
     back(){
       this.$router.back()
+    },
+    displayImage(){
+      this.showImage = !this.showImage;
     },
     async getNextSound() {
       try {
@@ -254,6 +265,10 @@ export default {
   box-sizing: border-box;
 }
 
+.img-on{
+  display:none;
+}
+
 .back{
   border: 1px solid black;
   width: 70px;
@@ -309,7 +324,7 @@ h2 {
 }
 
 .submit {
-  width: 100px;
+  width: 170px;
   background: #27ae60;
   font-weight: bold;
   color: white;
