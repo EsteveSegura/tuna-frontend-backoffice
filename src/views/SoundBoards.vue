@@ -15,6 +15,7 @@
       <thead>
         <tr>
           <th scope="col">Soundboard Name</th>
+          <th scope="col">Category</th>
           <th scope="col">Refined Sounds</th>
           <th scope="col">Not Refined Sounds</th>
         </tr>
@@ -31,6 +32,7 @@
               <b>{{ item.soundBoard }}</b>
             </router-link>
           </td>
+          <td data-label="Due Date">{{ item.category }}</td>
           <td data-label="Due Date">{{ item.refinedCount }}</td>
           <td data-label="Due Date">{{ item.notRefinedCount }}</td>
         </tr>
@@ -450,6 +452,7 @@ export default {
   },
   methods: {
     async load(val) {
+      console.log('::val',val);
       for (let [i, chunks] of this.soundboardsSplited.entries()) {
         console.log(i, val);
         if (i == val) {
@@ -457,11 +460,14 @@ export default {
             const response = await axios.get(
               `${process.env.VUE_APP_BASE_URL}/sounds/soundboard/count?soundBoard=${sb}`
             );
-
-            console.log(this.soundboardsWithCounter);
+            console.log('::reponse.data',response.data);
+            const responseCat = await axios.get(
+              `${process.env.VUE_APP_BASE_URL}/sounds/soundboard?soundBoard=${sb}`
+            );
             this.soundboardsWithCounter.push({
               soundBoard: response.config.url.split("=")[1],
               refinedCount: response.data.refinedCount,
+              category: responseCat.data.sounds[0].oldCategory,
               notRefinedCount: response.data.notRefinedCount,
             });
           }

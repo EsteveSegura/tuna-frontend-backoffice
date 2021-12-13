@@ -1,4 +1,6 @@
 <template>
+<div>
+  <div @click="back" class="back">BACK </div>
   <div class="container">
     <article class="card card--1">
       <div class="card__img">
@@ -87,6 +89,7 @@
       />
     </div>
   </div>
+  </div>
 </template>
 
 <script>
@@ -134,6 +137,9 @@ export default {
       const trimTags = splitTags.map((el) => `${el.trim()}`);
       const cleanTags = trimTags.filter((el) => el != "");
       return cleanTags.join("-");
+    },
+    back(){
+      this.$router.back()
     },
     async getNextSound() {
       try {
@@ -246,6 +252,17 @@ export default {
 * {
   font-family: "Roboto", sans-serif;
   box-sizing: border-box;
+}
+
+.back{
+  border: 1px solid black;
+  width: 70px;
+  margin-left: 7rem;
+  font-weight: 800;
+  text-align: center;
+  transform: translateY(20px);
+  user-select: none;
+  cursor: pointer;
 }
 
 .large {

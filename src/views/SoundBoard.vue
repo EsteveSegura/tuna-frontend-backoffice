@@ -18,6 +18,7 @@
         <thead>
           <tr>
             <th scope="col">Sound Name</th>
+            <th scope="col">Sound Image</th>
             <th scope="col">Category</th>
           </tr>
         </thead>
@@ -30,6 +31,7 @@
               </router-link>
               <span v-if="item.newTitle && !item.isRefined">⚡</span>
             </td>
+            <td data-label="Category"><img width="100" :src="'https://storage.googleapis.com/images-ugc/'+item.oldImageUrl"></td>
             <td data-label="Category">{{ item.oldCategory }}</td>
           </tr>
         </tbody>
@@ -45,6 +47,7 @@
         <thead>
           <tr>
             <th scope="col">Sound Name</th>
+            <th scope="col">Sound Image</th>
             <th scope="col">Category</th>
           </tr>
         </thead>
@@ -55,6 +58,7 @@
                 {{ item.oldTitle }}
               </router-link>
             </td>
+            <td data-label="Category"><img width="100" :src="item.newImageUrl"> </td>
             <td data-label="Category">{{ item.oldCategory }}</td>
           </tr>
         </tbody>
@@ -89,9 +93,10 @@ export default {
       el.soundUrl = `https://storage.googleapis.com/sounds-ugc/${el.soundUrl}`;
       return el;
     });
-
+  
     const notRefinedSounds = fixUrl.filter((el) => !el.isRefined);
     this.notRefinedSounds = notRefinedSounds;
+    console.log('::this.notRefinedSounds',this.notRefinedSounds);
 
     const refinedSounds = fixUrl.filter((el) => el.isRefined);
     this.refinedSounds = refinedSounds;
